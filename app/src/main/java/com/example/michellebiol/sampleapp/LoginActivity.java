@@ -1,6 +1,7 @@
 package com.example.michellebiol.sampleapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class LoginActivity extends AppCompatActivity{
 
      Button btnSignIn;
-     EditText userEmail;
+     EditText userUsername;
      EditText userPassword;
      IUserApi service;
 
@@ -34,7 +35,7 @@ public class LoginActivity extends AppCompatActivity{
         setContentView(R.layout.activity_login);
 
         btnSignIn = (Button)findViewById(R.id.signInBtn);
-        userEmail = (EditText)findViewById(R.id.userEmail);
+        userUsername = (EditText)findViewById(R.id.userUsername);
         userPassword = (EditText)findViewById(R.id.userPassword);
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -51,9 +52,9 @@ public class LoginActivity extends AppCompatActivity{
     {
 
         TokenRequest tokenRequest = new TokenRequest();
-        tokenRequest.setEmail(userEmail.getText().toString());
-
+        tokenRequest.setUsername(userUsername.getText().toString());
         tokenRequest.setPassword(userPassword.getText().toString());
+
 
         Call<TokenResponse> tokenResponseCall = service.getTokenAccess(tokenRequest);
 
@@ -61,21 +62,53 @@ public class LoginActivity extends AppCompatActivity{
             @Override
             public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
                 int statusCode = response.code();
+                if(response.isSuccessful())
+                {
+                    TokenResponse tokenResponse = response.body();
 
-                TokenResponse tokenResponse = response.body();
-                Toast.makeText(LoginActivity.this, "Status code :" + statusCode, Toast.LENGTH_SHORT).show();
-//                Log.d("LoginActivity" ,"onReponse" + statusCode);
+                    //store the user access token in the shared preferences
+                    saveToken(tokenResponse.getToken_type(),tokenResponse.getAccess_token());
+
+                    //for development purpose display the saved tokens
+                    displayTokens();
+
+
+                } else
+                {
+
+                    Toast.makeText(LoginActivity.this, "Please check your username or password", Toast.LENGTH_SHORT).show();
+                }
+
 
             }
 
             @Override
             public void onFailure(Call<TokenResponse> call, Throwable t) {
-//                Log.d("LoginActivity","onFailure" + t.getMessage());
                 Toast.makeText(LoginActivity.this, "Status code :" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
+
     }
+
+    public void saveToken(String token_type , String token)
+    {
+        SharedPreferences sharedPref = getSharedPreferences("tokens",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("token_type",token_type);
+        editor.putString("token",token);
+        editor.apply();
+        Toast.makeText(LoginActivity.this, "Saved!", Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void displayTokens()
+    {
+        SharedPreferences sharedPref = getSharedPreferences("tokens",Context.MODE_PRIVATE);
+        Toast.makeText(LoginActivity.this, "Token Type :" + sharedPref.getString("token_type",""), Toast.LENGTH_SHORT).show();
+        Toast.makeText(LoginActivity.this, "Token :" + sharedPref.getString("token",""), Toast.LENGTH_SHORT).show();
+    }
+
 
 
 }
