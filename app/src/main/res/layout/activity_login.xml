@@ -13,13 +13,28 @@
         android:layout_centerInParent="true"
         android:orientation="vertical" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Activity 2"
-        android:layout_gravity="center_horizontal"
-        />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email address"
+            android:id="@+id/userEmail"/>
 
+        <EditText
+            android:id="@+id/userPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:inputType="textPassword"
+            android:hint="Password"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign in"
+            android:onClick = "login"
+            android:id="@+id/btnUserLogin"/>
     </LinearLayout>
+
+
 
 </RelativeLayout>
