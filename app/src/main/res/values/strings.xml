@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Quick Guess</string>
+    <string name="facebook_app_id">669497400062775</string>
+    <string name="facebook_login_protocol_scheme">fb669497400062775</string>
+</resources>
