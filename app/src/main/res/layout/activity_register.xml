@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,8 +16,22 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email address"
+            android:hint="Name"
+            android:id="@+id/userName"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"
             android:id="@+id/userUsername"/>
+
+        <EditText
+            android:id="@+id/userEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:hint="Email Address"
+            />
 
         <EditText
             android:id="@+id/userPassword"
@@ -27,21 +41,25 @@
             android:inputType="textPassword"
             android:hint="Password"/>
 
-        <Button
+
+        <EditText
+            android:id="@+id/confirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create an account"
-            android:onClick = "registerActivity"
-            android:id="@+id/btnRegisterRedirect"/>
+            android:layout_marginTop="45dp"
+            android:inputType="textPassword"
+            android:hint="Retype password"/>
+
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign in"
-            android:onClick = "login"
-            android:id="@+id/btnUserLogin"/>
+            android:text="Sign up"
+            android:layout_marginTop="45dp"
+            android:onClick = "register"
+            android:id="@+id/btnUserSignUp"/>
     </LinearLayout>
 
 
 
-</RelativeLayout>
+</ScrollView>
