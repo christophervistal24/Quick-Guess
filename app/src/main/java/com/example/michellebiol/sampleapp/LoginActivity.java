@@ -71,7 +71,8 @@ public class LoginActivity extends AppCompatActivity{
                     saveToken(tokenResponse.getToken_type(),tokenResponse.getAccess_token());
 
                     //for development purpose display the saved tokens
-                    displayTokens();
+//                    displayTokens();
+                    homeActivity();
 
 
                 } else
@@ -113,6 +114,12 @@ public class LoginActivity extends AppCompatActivity{
     public void registerActivity(View view)
     {
         Intent intent  = new Intent(this,RegisterActivity.class);
+        startActivity(intent);
+    }
+
+    private void homeActivity()
+    {
+        Intent intent  = new Intent(this,HomeActivity.class);
         startActivity(intent);
     }
 

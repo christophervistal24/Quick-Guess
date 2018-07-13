@@ -46,15 +46,14 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:id="@+id/signInBtn"
-            android:text="Sign in"
+            android:text="SIGN IN OR CREATE AN ACCOUNT"
             />
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/login_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            />
+            android:layout_gravity="center_horizontal" />
 
 
     </LinearLayout>

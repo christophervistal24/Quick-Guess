@@ -1,5 +1,6 @@
 package com.example.michellebiol.sampleapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,8 +25,8 @@ public class RegisterActivity extends AppCompatActivity {
     Button btnUserSignUp;
     EditText userEmail;
     EditText userUsername;
-    EditText userName;
     EditText userPassword;
+    EditText confirmPassword;
     IRegisterUserApi services;
 
     @Override
@@ -33,10 +34,10 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        userEmail = (EditText)findViewById(R.id.userEmail);
-        userUsername = (EditText)findViewById(R.id.userUsername);
-        userName = (EditText)findViewById(R.id.userName);
-        userPassword = (EditText)findViewById(R.id.userPassword);
+        userEmail = (EditText) findViewById(R.id.userEmail);
+        userUsername = (EditText) findViewById(R.id.userUsername);
+        userPassword = (EditText) findViewById(R.id.userPassword);
+        confirmPassword = (EditText) findViewById(R.id.confirmPassword);
 
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -47,34 +48,51 @@ public class RegisterActivity extends AppCompatActivity {
         services = retrofit.create(IRegisterUserApi.class);
     }
 
-    public void register(View v)
-    {
+    public void register(View v) {
+        if (passwordConfirmation(userPassword.getText().toString(), confirmPassword.getText().toString())) {
+            final RegisterUserRequest registerUser = new RegisterUserRequest();
 
-        RegisterUserRequest registerUser = new RegisterUserRequest();
-
-        registerUser.setUsername(userUsername.getText().toString());
-        registerUser.setName(userName.getText().toString());
-        registerUser.setEmail(userEmail.getText().toString());
-        registerUser.setPassword(userPassword.getText().toString());
+            registerUser.setUsername(userUsername.getText().toString());
+            registerUser.setEmail(userEmail.getText().toString());
+            registerUser.setPassword(userPassword.getText().toString());
 
 
-        Call<RegisterUserResponse> registerUserResponseCall = services.newUser(registerUser);
-        registerUserResponseCall.enqueue(new Callback<RegisterUserResponse>() {
-            @Override
-            public void onResponse(Call<RegisterUserResponse> call, Response<RegisterUserResponse> response) {
+            Call<RegisterUserResponse> registerUserResponseCall = services.newUser(registerUser);
+            registerUserResponseCall.enqueue(new Callback<RegisterUserResponse>() {
+                @Override
+                public void onResponse(Call<RegisterUserResponse> call, Response<RegisterUserResponse> response) {
 
-                if(response.isSuccessful())
-                {
-                    RegisterUserResponse registerUserResponse = new RegisterUserResponse();
-                    Toast.makeText(RegisterActivity.this, "Successfully create an account", Toast.LENGTH_SHORT).show();
+                    if (passwordConfirmation(userPassword.getText().toString(), confirmPassword.getText().toString())) {
+                        if (response.isSuccessful()) {
+                            RegisterUserResponse registerUserResponse = response.body();
+                            Toast.makeText(RegisterActivity.this, registerUserResponse.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "Password did not match", Toast.LENGTH_SHORT).show();
+                    }
+
+
                 }
-            }
 
-            @Override
-            public void onFailure(Call<RegisterUserResponse> call, Throwable t) {
-//                Toast.makeText(RegisterActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<RegisterUserResponse> call, Throwable t) {
+                    Toast.makeText(RegisterActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(RegisterActivity.this, "Password not match", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
+
+    private boolean passwordConfirmation(String password, String retypePassword) {
+        if (password.equals(retypePassword)) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
 }

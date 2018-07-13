@@ -4,9 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class RegisterUserResponse {
-    @SerializedName("name")
-    @Expose
-    private String name;
 
     @SerializedName("email")
     @Expose
@@ -16,13 +13,10 @@ public class RegisterUserResponse {
     @Expose
     private String username;
 
-    public String getName() {
-        return name;
-    }
+    @SerializedName("message")
+    @Expose
+    private String message;
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getEmail() {
         return email;
@@ -33,10 +27,19 @@ public class RegisterUserResponse {
     }
 
     public String getUsername() {
-        return username;
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
