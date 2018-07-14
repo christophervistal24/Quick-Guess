@@ -4,12 +4,14 @@ public class CategoriesItem {
 
     private String head;
     private String desc;
+    private String id;
 
 
-    public CategoriesItem(String head , String desc)
+    public CategoriesItem(String id , String head , String desc)
     {
         this.head = head;
         this.desc = desc;
+        this.id = id;
     }
 
     public String getHead() {
@@ -18,5 +20,9 @@ public class CategoriesItem {
 
     public String getDesc() {
         return desc;
+    }
+
+    public String getId() {
+        return id;
     }
 }

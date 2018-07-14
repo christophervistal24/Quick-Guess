@@ -25,7 +25,8 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".HomeActivity" />
-        <activity android:name=".CategoriesActivity"></activity>
+        <activity android:name=".CategoriesActivity" />
+        <activity android:name=".CategoryQuestion"></activity>
     </application>
 
 </manifest>

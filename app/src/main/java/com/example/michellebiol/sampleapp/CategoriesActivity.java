@@ -6,10 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.example.michellebiol.sampleapp.Interfaces.ICategoriesApi;
-import com.example.michellebiol.sampleapp.Models.CategoriesAdapter;
+import com.example.michellebiol.sampleapp.Adapters.CategoriesAdapter;
 import com.example.michellebiol.sampleapp.Models.CategoriesItem;
 import com.example.michellebiol.sampleapp.Models.CategoriesResponse;
 
@@ -40,17 +39,6 @@ public class CategoriesActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-//        categoriesItems = new ArrayList<>();
-
-//        for(int i = 0; i<=10; i++)
-//        {
-//            CategoriesItem categoriesItem = new CategoriesItem("Header" + (i + 1) , "Lorem Ipsum" + i);
-//            categoriesItems.add(categoriesItem);
-//        }
-//
-//        adapter = new CategoriesAdapter(categoriesItems,this);
-
-
         sampleGetCategories();
     }
 
@@ -79,7 +67,7 @@ public class CategoriesActivity extends AppCompatActivity {
 
                 for(CategoriesResponse c : categories)
                 {
-                    CategoriesItem categoriesItem = new CategoriesItem(c.getCategories(), c.getCategories_description());
+                    CategoriesItem categoriesItem = new CategoriesItem(c.getId() , c.getCategories(), c.getCategories_description());
                     categoriesItems.add(categoriesItem);
                 }
                 adapter = new CategoriesAdapter(categoriesItems,getApplicationContext());

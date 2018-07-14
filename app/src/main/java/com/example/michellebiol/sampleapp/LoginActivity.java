@@ -1,5 +1,6 @@
 package com.example.michellebiol.sampleapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +29,7 @@ public class LoginActivity extends AppCompatActivity{
      EditText userUsername;
      EditText userPassword;
      IUserApi service;
+    ProgressDialog mDialog;
 
 
     @Override
@@ -51,7 +53,9 @@ public class LoginActivity extends AppCompatActivity{
 
     public void login(View view)
     {
-
+        mDialog = new ProgressDialog(LoginActivity.this);
+        mDialog.setMessage("Please wait . . .");
+        mDialog.show();
         TokenRequest tokenRequest = new TokenRequest();
         tokenRequest.setUsername(userUsername.getText().toString());
         tokenRequest.setPassword(userPassword.getText().toString());
@@ -70,8 +74,9 @@ public class LoginActivity extends AppCompatActivity{
                     //store the user access token in the shared preferences
                     saveToken(tokenResponse.getToken_type(),tokenResponse.getAccess_token());
 
-                    //for development purpose display the saved tokens
+//                    for development purpose display the saved tokens
 //                    displayTokens();
+                    mDialog.dismiss();
                     homeActivity();
 
 
@@ -100,16 +105,16 @@ public class LoginActivity extends AppCompatActivity{
         editor.putString("token_type",token_type);
         editor.putString("token",token);
         editor.apply();
-        Toast.makeText(LoginActivity.this, "Saved!", Toast.LENGTH_SHORT).show();
 
     }
 
-    public void displayTokens()
-    {
-        SharedPreferences sharedPref = getSharedPreferences("tokens",Context.MODE_PRIVATE);
-        Toast.makeText(LoginActivity.this, "Token Type :" + sharedPref.getString("token_type",""), Toast.LENGTH_SHORT).show();
-        Toast.makeText(LoginActivity.this, "Token :" + sharedPref.getString("token",""), Toast.LENGTH_SHORT).show();
-    }
+//
+//    public void displayTokens()
+//    {
+//        SharedPreferences sharedPref = getSharedPreferences("tokens",Context.MODE_PRIVATE);
+//        Toast.makeText(LoginActivity.this, "Token Type :" + sharedPref.getString("token_type",""), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(LoginActivity.this, "Token :" + sharedPref.getString("token",""), Toast.LENGTH_SHORT).show();
+//    }
 
     public void registerActivity(View view)
     {
