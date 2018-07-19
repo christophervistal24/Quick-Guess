@@ -53,7 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
             final RegisterUserRequest registerUser = new RegisterUserRequest();
 
             registerUser.setUsername(userUsername.getText().toString());
-            registerUser.setEmail(userEmail.getText().toString());
+//            registerUser.setEmail(userEmail.getText().toString());
             registerUser.setPassword(userPassword.getText().toString());
 
 

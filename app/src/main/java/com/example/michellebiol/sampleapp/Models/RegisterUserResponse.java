@@ -5,10 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class RegisterUserResponse {
 
-    @SerializedName("email")
-    @Expose
-    private String email;
-
     @SerializedName("username")
     @Expose
     private String username;
@@ -17,14 +13,14 @@ public class RegisterUserResponse {
     @Expose
     private String message;
 
+    @SerializedName("access_token")
+    @Expose
+    private String access_token;
+    @SerializedName("token_type")
+    @Expose
+    private String token_type;
 
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getUsername() {
             return username;
@@ -41,5 +37,13 @@ public class RegisterUserResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getToken_type() {
+        return token_type;
+    }
+
+    public String getAccess_token() {
+        return access_token;
     }
 }
