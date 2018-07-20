@@ -44,8 +44,8 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Third"
-            android:onClick="thirdActivity"
+            android:text="Accounts"
+            android:onClick="accounts"
             android:id="@+id/btnThird"/>
 
         <Button

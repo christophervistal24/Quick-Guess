@@ -4,6 +4,8 @@ public class RegisterUserRequest {
 
     private String username;
     private String password;
+    private String android_id;
+    private String android_mac;
 
 
     public String getUsername() {
@@ -23,4 +25,19 @@ public class RegisterUserRequest {
     }
 
 
+    public String getAndroid_id() {
+        return android_id;
+    }
+
+    public void setAndroid_id(String android_id) {
+        this.android_id = android_id;
+    }
+
+    public String getAndroid_mac() {
+        return android_mac;
+    }
+
+    public void setAndroid_mac(String android_mac) {
+        this.android_mac = android_mac;
+    }
 }

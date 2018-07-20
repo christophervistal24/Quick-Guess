@@ -5,12 +5,16 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.michellebiol.sampleapp.AccountsActivity;
+import com.example.michellebiol.sampleapp.CategoriesActivity;
 import com.example.michellebiol.sampleapp.R;
 
 public class PlayerNameDialog extends AppCompatDialogFragment {
@@ -24,6 +28,13 @@ public class PlayerNameDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.layout_dialog,null);
         builder.setView(view)
                 .setTitle("Player name")
+                .setNegativeButton("Accounts", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent  = new Intent(getContext(),AccountsActivity.class);
+                        startActivity(intent);
+                    }
+                })
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

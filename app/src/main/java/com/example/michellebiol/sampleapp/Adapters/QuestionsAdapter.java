@@ -34,25 +34,35 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         final QuestionsItem questionsItem = questionsItems.get(position);
         holder.textViewId.setText(questionsItem.getId());
         holder.textViewQuest.setText(questionsItem.getQuest());
-        holder.questionsLinearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context , AnswerQuestion.class);
-                intent.putExtra("question_id",questionsItem.getId());
-                intent.putExtra("question",questionsItem.getQuest());
-                intent.putExtra("choice_a",questionsItem.getChoice_a());
-                intent.putExtra("choice_b",questionsItem.getChoice_b());
-                intent.putExtra("choice_c",questionsItem.getChoice_c());
-                intent.putExtra("choice_d",questionsItem.getChoice_d());
-                intent.putExtra("correct_answer",questionsItem.getCorrect_answer());
-                intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            }
-        });
+        holder.textViewResult.setText(questionsItem.getQuestion_result());
+        if (holder.textViewResult.getText().equals("wrong") || holder.textViewResult.getText().equals("correct"))
+        {
+
+        } else
+        {
+            holder.questionsLinearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context , AnswerQuestion.class);
+                    intent.putExtra("question_id",questionsItem.getId());
+                    intent.putExtra("question",questionsItem.getQuest());
+                    intent.putExtra("choice_a",questionsItem.getChoice_a());
+                    intent.putExtra("choice_b",questionsItem.getChoice_b());
+                    intent.putExtra("choice_c",questionsItem.getChoice_c());
+                    intent.putExtra("choice_d",questionsItem.getChoice_d());
+                    intent.putExtra("correct_answer",questionsItem.getCorrect_answer());
+                    intent.putExtra("fun_facts",questionsItem.getFun_facts());
+                    Toast.makeText(context, "Position :" + position, Toast.LENGTH_SHORT).show();
+                    intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+            });
+        }
+
     }
 
     @Override
@@ -63,12 +73,14 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.View
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewId;
         public TextView textViewQuest;
+        public TextView textViewResult;
         public LinearLayout questionsLinearLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
             textViewId = (TextView) itemView.findViewById(R.id.textViewId);
             textViewQuest = (TextView) itemView.findViewById(R.id.textViewQuest);
+            textViewResult = (TextView) itemView.findViewById(R.id.textViewResult);
             questionsLinearLayout = (LinearLayout) itemView.findViewById(R.id.questionsLinearLayout);
         }
     }

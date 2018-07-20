@@ -16,9 +16,15 @@ public class RegisterUserResponse {
     @SerializedName("access_token")
     @Expose
     private String access_token;
+
     @SerializedName("token_type")
     @Expose
     private String token_type;
+
+    @SerializedName("id")
+    @Expose
+    private String id;
+
 
 
 
@@ -46,4 +52,6 @@ public class RegisterUserResponse {
     public String getAccess_token() {
         return access_token;
     }
+
+    public String getId() { return id; }
 }

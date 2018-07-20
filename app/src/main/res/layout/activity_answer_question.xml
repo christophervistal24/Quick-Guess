@@ -44,25 +44,25 @@
             <RadioButton android:id="@+id/choice_a"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="getSelected"
+
                 />
 
             <RadioButton android:id="@+id/choice_b"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="getSelected"
+
                 />
 
             <RadioButton android:id="@+id/choice_c"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="getSelected"
+
                 />
 
             <RadioButton android:id="@+id/choice_d"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="getSelected"
+
                 />
 
         </RadioGroup>

@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,20 +43,26 @@ public class CategoryQuestion extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_question);
-
+        mDialog = new ProgressDialog(CategoryQuestion.this);
+        mDialog.setMessage("Retrieving all question");
+        mDialog.show();
         questionRecyclerView = (RecyclerView)findViewById(R.id.questionRecyclerView);
         questionRecyclerView.setHasFixedSize(true);
         questionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        getQuestions();
 
+    }
+
+    @Override
+    protected void onResume()
+    {
+        getQuestions();
+        super.onResume();
     }
 
     private void getQuestions()
     {
-        mDialog = new ProgressDialog(CategoryQuestion.this);
-        mDialog.setMessage("Retrieving all questions . . .");
-        mDialog.show();
+
         SharedPreferences sharedPref = getSharedPreferences("tokens", Context.MODE_PRIVATE);
         String token_type = sharedPref.getString("token_type","");
         String token = sharedPref.getString("token","");
@@ -72,16 +80,19 @@ public class CategoryQuestion extends AppCompatActivity {
         Call<List<QuestionsResponse>> call = service.getQuestions(token_type+token,Integer.parseInt(id));
 
         call.enqueue(new Callback<List<QuestionsResponse>>() {
+
             @Override
             public void onResponse(Call<List<QuestionsResponse>> call, Response<List<QuestionsResponse>> response) {
                 List<QuestionsResponse> questions = response.body();
                 for(QuestionsResponse q: questions)
                 {
-                    QuestionsItem questionsItem = new QuestionsItem(
+                            QuestionsItem questionsItem = new QuestionsItem(
                             q.getId(),q.getQuestion(),q.getQuestion_categories_id(),
-                            q.getChoice_a(),q.getChoice_b(),q.getChoice_c(),q.getChoice_d(),q.getCorrect_answer()
-                    );
-                    questionsItems.add(questionsItem);
+                            q.getChoice_a(),q.getChoice_b(),q.getChoice_c(),q.getChoice_d(),q.getCorrect_answer(),
+                            q.getFun_facts(),q.getQuestion_result());
+
+                           questionsItems.add(questionsItem);
+
                 }
                 adapter = new QuestionsAdapter(questionsItems,getApplicationContext());
                 questionRecyclerView.setAdapter(adapter);
@@ -96,6 +107,4 @@ public class CategoryQuestion extends AppCompatActivity {
 
 
     }
-
-
 }

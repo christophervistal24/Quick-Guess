@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.example.michellebiol.sampleapp.Interfaces.ICategoriesApi;
 import com.example.michellebiol.sampleapp.Adapters.CategoriesAdapter;
@@ -48,6 +49,7 @@ public class CategoriesActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("tokens", Context.MODE_PRIVATE);
         String token_type = sharedPref.getString("token_type","");
         String token = sharedPref.getString("token","");
+        String user_id = sharedPref.getString("user_id","");
         String authHeader = token_type+token;
         categoriesItems = new ArrayList<>();
 

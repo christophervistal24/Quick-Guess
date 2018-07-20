@@ -1,6 +1,8 @@
 package com.example.michellebiol.sampleapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,8 +13,21 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.michellebiol.sampleapp.Interfaces.IAnswerApi;
+import com.example.michellebiol.sampleapp.Interfaces.IRegisterUserApi;
+import com.example.michellebiol.sampleapp.Models.AnswerRequest;
+import com.example.michellebiol.sampleapp.Models.AnswerResponse;
+
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AnswerQuestion extends AppCompatActivity {
 
@@ -29,6 +44,8 @@ public class AnswerQuestion extends AppCompatActivity {
     Integer counter = 20;
     CountDownTimer countDownTimer;
     Button nextStage;
+    IAnswerApi services;
+    Intent i;
 
 
 
@@ -45,8 +62,16 @@ public class AnswerQuestion extends AppCompatActivity {
         choiceC = (RadioButton) findViewById(R.id.choice_c);
         choiceD = (RadioButton) findViewById(R.id.choice_d);
         RGroup = (RadioGroup) findViewById(R.id.RGroup);
+        i =  getIntent();
         timerCountDown = (TextView) findViewById(R.id.timerCountDown);
         nextStage = (Button) findViewById(R.id.nextStage);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(getString(R.string.user_api_url))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        services = retrofit.create(IAnswerApi.class);
 
         setTimer();
         setQuestionAndAnswer();
@@ -67,7 +92,6 @@ public class AnswerQuestion extends AppCompatActivity {
     }
 
     private void setQuestionAndAnswer() {
-        Intent i = getIntent();
 
         String question_id = i.getStringExtra("question_id");
         String question = i.getStringExtra("question");
@@ -107,6 +131,7 @@ public class AnswerQuestion extends AppCompatActivity {
     public void getSelected(View v)
     {
         int radioId = RGroup.getCheckedRadioButtonId();
+
         radioButton = findViewById(radioId);
         if (radioId <= -1)
         {
@@ -114,22 +139,28 @@ public class AnswerQuestion extends AppCompatActivity {
         }
         else
         {
-            Toast.makeText(this, "Result : " + isCorrect(radioButton.getText().toString()), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Result : " + isCorrect(radioButton.getText().toString()) , Toast.LENGTH_SHORT).show();
+            displayFunFacts();
         }
     }
 
+
     private String isCorrect(String selectedAnswer)
     {
-        Intent i = getIntent();
-        String correct_answer = i.getStringExtra("correct_answer");
 
-        if(selectedAnswer.equals(correct_answer))
+        String[] intentValue = initIntent();
+        String result = null;
+        if(selectedAnswer.equals(intentValue[2]))
         {
-            return "Correct";
+            result =  "Correct";
+            sendAnswer(result);
+            return result;
         }
         else
         {
-            return "Wrong";
+            result = "Wrong";
+            sendAnswer(result);
+            return result;
         }
     }
 
@@ -139,9 +170,12 @@ public class AnswerQuestion extends AppCompatActivity {
         if (radioId <= -1)
         {
             Toast.makeText(this,  "Result : " + isCorrect("No Answer"), Toast.LENGTH_SHORT).show();
+            displayFunFacts();
+
 
         }else {
             Toast.makeText(this, "Result : " + isCorrect(radioButton.getText().toString()), Toast.LENGTH_SHORT).show();
+            displayFunFacts();
         }
     }
 
@@ -150,4 +184,47 @@ public class AnswerQuestion extends AppCompatActivity {
         countDownTimer.cancel();
         super.onBackPressed();
     }
+
+    private String[] initIntent()
+    {
+
+        String correct_answer = i.getStringExtra("correct_answer");
+        String question_id = i.getStringExtra("question_id");
+
+        SharedPreferences sharedPref = getSharedPreferences("tokens", Context.MODE_PRIVATE);
+        String token_type = sharedPref.getString("token_type","");
+        String token = sharedPref.getString("token","");
+
+        return new String[]{token_type,token,correct_answer,question_id};
+    }
+
+
+    private void displayFunFacts()
+    {
+        Toast.makeText(this, "Fun Facts : " + i.getStringExtra("fun_facts"), Toast.LENGTH_SHORT).show();
+    }
+
+    private void sendAnswer(String result)
+    {
+        String[] intentValue = initIntent();
+        final AnswerRequest answerRequest = new AnswerRequest();
+        answerRequest.setQuestion_id(Integer.parseInt(intentValue[3]));
+        answerRequest.setQuestion_result(result);
+
+        Call<AnswerResponse> answerResponseCall = services.userAnswer(intentValue[0].concat(intentValue[1]),answerRequest);
+        answerResponseCall.enqueue(new Callback<AnswerResponse>() {
+            @Override
+            public void onResponse(Call<AnswerResponse> call, Response<AnswerResponse> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<AnswerResponse> call, Throwable t) {
+                Toast.makeText(AnswerQuestion.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+
 }
