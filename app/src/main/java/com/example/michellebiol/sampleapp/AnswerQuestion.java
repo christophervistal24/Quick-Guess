@@ -13,16 +13,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.michellebiol.sampleapp.Adapters.QuestionsAdapter;
 import com.example.michellebiol.sampleapp.Interfaces.IAnswerApi;
-import com.example.michellebiol.sampleapp.Interfaces.IRegisterUserApi;
 import com.example.michellebiol.sampleapp.Models.AnswerRequest;
 import com.example.michellebiol.sampleapp.Models.AnswerResponse;
 import com.example.michellebiol.sampleapp.Models.QuestionsItem;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import retrofit2.Call;
@@ -43,12 +39,15 @@ public class AnswerQuestion extends AppCompatActivity {
     RadioGroup RGroup;
     RadioButton radioButton;
     TextView timerCountDown;
-    Integer counter = 20;
+    static final int counter = 20;
     CountDownTimer countDownTimer;
     Button nextStage;
     IAnswerApi services;
     Intent i;
-    public static List<QuestionsItem> questionsItems;
+    static int intPosition;
+    QuestionsItem question;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,21 +62,21 @@ public class AnswerQuestion extends AppCompatActivity {
         choiceC = (RadioButton) findViewById(R.id.choice_c);
         choiceD = (RadioButton) findViewById(R.id.choice_d);
         RGroup = (RadioGroup) findViewById(R.id.RGroup);
+        final QuestionsItem question;
         i =  getIntent();
+
         timerCountDown = (TextView) findViewById(R.id.timerCountDown);
         nextStage = (Button) findViewById(R.id.nextStage);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(getString(R.string.user_api_url))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         services = retrofit.create(IAnswerApi.class);
-
-        setTimer();
+        setTimer(counter);
         setQuestionAndAnswer();
     }
 
-    private void setTimer() {
+    private void setTimer(Integer counter) {
 
         countDownTimer = new CountDownTimer(counter * 1000,1000) {
             public void onTick(long millisUntilFinished) {
@@ -92,17 +91,12 @@ public class AnswerQuestion extends AppCompatActivity {
     }
 
     private void setQuestionAndAnswer() {
-
-        String question_id = i.getStringExtra("question_id");
-        String question = i.getStringExtra("question");
-        String choice_a = i.getStringExtra("choice_a");
-        String choice_b = i.getStringExtra("choice_b");
-        String choice_c = i.getStringExtra("choice_c");
-        String choice_d = i.getStringExtra("choice_d");
-
-        givenQuestionId.setText("Question ID : " + question_id);
-        givenQuestion.setText("Question : " + question);
-        String[] arr = {choice_a,choice_b,choice_c,choice_d};
+        String position = i.getStringExtra("current_position");
+        intPosition = Integer.parseInt(position);
+        question = QuestionsAdapter.questionsItems.get(intPosition);
+        givenQuestionId.setText("Question ID : " + question.getId());
+        givenQuestion.setText("Question : " + question.getQuest());
+        String[] arr = {question.getChoice_a(),question.getChoice_b(),question.getChoice_c(),question.getChoice_d()};
         int n = arr.length;
         String[] shuffledChoices = randomize(arr,n);
         choiceA.setText(shuffledChoices[0]);
@@ -131,7 +125,6 @@ public class AnswerQuestion extends AppCompatActivity {
     public void getSelected(View v)
     {
         int radioId = RGroup.getCheckedRadioButtonId();
-        Toast.makeText(this, "Postion :" + String.valueOf(questionsItems), Toast.LENGTH_SHORT).show();
         radioButton = findViewById(radioId);
         if (radioId <= -1)
         {
@@ -140,17 +133,38 @@ public class AnswerQuestion extends AppCompatActivity {
         else
         {
             Toast.makeText(this, "Result : " + isCorrect(radioButton.getText().toString()) , Toast.LENGTH_SHORT).show();
+            proceedToNextQuestion();
             displayFunFacts();
         }
+    }
+
+    private void proceedToNextQuestion()
+    {
+        intPosition++;
+        isFinish(QuestionsAdapter.questionsItems.size());
+        countDownTimer.cancel();
+        question = QuestionsAdapter.questionsItems.get(intPosition);
+        givenQuestionId.setText("Question ID : " + question.getId());
+        givenQuestion.setText("Question : " + question.getQuest());
+        String[] arr = {question.getChoice_a(),question.getChoice_b(),question.getChoice_c(),question.getChoice_d()};
+        int n = arr.length;
+        String[] shuffledChoices = randomize(arr,n);
+        choiceA.setText(shuffledChoices[0]);
+        choiceB.setText(shuffledChoices[1]);
+        choiceC.setText(shuffledChoices[2]);
+        choiceD.setText(shuffledChoices[3]);
+        setTimer(counter);
+
+        //method that check if the user reach the max questions
+
     }
 
 
     private String isCorrect(String selectedAnswer)
     {
 
-        String[] intentValue = initIntent();
         String result = null;
-        if(selectedAnswer.equals(intentValue[2]))
+        if(selectedAnswer.equals(question.getCorrect_answer()))
         {
             result =  "Correct";
             sendAnswer(result);
@@ -188,27 +202,25 @@ public class AnswerQuestion extends AppCompatActivity {
     private String[] initIntent()
     {
 
-        String correct_answer = i.getStringExtra("correct_answer");
-        String question_id = i.getStringExtra("question_id");
 
         SharedPreferences sharedPref = getSharedPreferences("tokens", Context.MODE_PRIVATE);
         String token_type = sharedPref.getString("token_type","");
         String token = sharedPref.getString("token","");
 
-        return new String[]{token_type,token,correct_answer,question_id};
+        return new String[]{token_type,token,question.getCorrect_answer(),question.getId()};
     }
 
 
     private void displayFunFacts()
     {
-        Toast.makeText(this, "Fun Facts : " + i.getStringExtra("fun_facts"), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Fun Facts : " + question.getFun_facts(), Toast.LENGTH_SHORT).show();
     }
 
     private void sendAnswer(String result)
     {
         String[] intentValue = initIntent();
         final AnswerRequest answerRequest = new AnswerRequest();
-        answerRequest.setQuestion_id(Integer.parseInt(intentValue[3]));
+        answerRequest.setQuestion_id(Integer.parseInt(question.getId()));
         answerRequest.setQuestion_result(result);
 
         Call<AnswerResponse> answerResponseCall = services.userAnswer(intentValue[0].concat(intentValue[1]),answerRequest);

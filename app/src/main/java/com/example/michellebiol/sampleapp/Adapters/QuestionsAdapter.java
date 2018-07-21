@@ -48,15 +48,7 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.View
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context , AnswerQuestion.class);
-                    intent.putExtra("question_id",questionsItem.getId());
-                    intent.putExtra("question",questionsItem.getQuest());
-                    intent.putExtra("choice_a",questionsItem.getChoice_a());
-                    intent.putExtra("choice_b",questionsItem.getChoice_b());
-                    intent.putExtra("choice_c",questionsItem.getChoice_c());
-                    intent.putExtra("choice_d",questionsItem.getChoice_d());
-                    intent.putExtra("correct_answer",questionsItem.getCorrect_answer());
-                    intent.putExtra("fun_facts",questionsItem.getFun_facts());
-                    Toast.makeText(context, "Position :" + position, Toast.LENGTH_SHORT).show();
+                    intent.putExtra("current_position",String.valueOf(position));
                     intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 }
