@@ -18,7 +18,7 @@ import java.util.List;
 
 public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.ViewHolder> {
 
-    private List<QuestionsItem> questionsItems;
+    public static List<QuestionsItem> questionsItems;
     private Context context;
 
     public QuestionsAdapter(List<QuestionsItem> questionsItems, Context context) {

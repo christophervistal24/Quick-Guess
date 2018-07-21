@@ -17,9 +17,11 @@ import com.example.michellebiol.sampleapp.Interfaces.IAnswerApi;
 import com.example.michellebiol.sampleapp.Interfaces.IRegisterUserApi;
 import com.example.michellebiol.sampleapp.Models.AnswerRequest;
 import com.example.michellebiol.sampleapp.Models.AnswerResponse;
+import com.example.michellebiol.sampleapp.Models.QuestionsItem;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -46,8 +48,7 @@ public class AnswerQuestion extends AppCompatActivity {
     Button nextStage;
     IAnswerApi services;
     Intent i;
-
-
+    public static List<QuestionsItem> questionsItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,6 @@ public class AnswerQuestion extends AppCompatActivity {
         i =  getIntent();
         timerCountDown = (TextView) findViewById(R.id.timerCountDown);
         nextStage = (Button) findViewById(R.id.nextStage);
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(getString(R.string.user_api_url))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -131,7 +131,7 @@ public class AnswerQuestion extends AppCompatActivity {
     public void getSelected(View v)
     {
         int radioId = RGroup.getCheckedRadioButtonId();
-
+        Toast.makeText(this, "Postion :" + String.valueOf(questionsItems), Toast.LENGTH_SHORT).show();
         radioButton = findViewById(radioId);
         if (radioId <= -1)
         {
