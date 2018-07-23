@@ -13,6 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
         <activity
             android:name=".HomeActivity"
             android:label="@string/app_name">
@@ -27,6 +29,10 @@
         <activity android:name=".CategoryQuestion" />
         <activity android:name=".AnswerQuestion" />
         <activity android:name=".AccountsActivity"></activity>
+        <provider
+            android:authorities="com.facebook.app.FacebookContentProvider201329987230090"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true"/>
     </application>
 
 </manifest>
